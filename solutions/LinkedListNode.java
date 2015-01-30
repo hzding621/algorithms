@@ -1,13 +1,13 @@
 public class LinkedListNode {
 	LinkedListNode next = null;
-	int data;
+	int val;
 
 	public LinkedListNode(int d) {
-		data = d;
+		val = d;
 	}
 
 	public LinkedListNode(int[] array) {
-		data = array[0];
+		val = array[0];
 		for (int i = 1; i < array.length; i++)
 			appendToTail(array[i]);
 	}
@@ -23,10 +23,12 @@ public class LinkedListNode {
 
 	public void print() {
 		LinkedListNode n = this;
-		System.out.print("[");
+		System.out.print("[" + n.val);
+
+		n = n.next;
 		while (n != null)
 		{
-			System.out.print(n.data + ", ");
+			System.out.print(", " + n.val);
 			n=n.next;
 		}
 		System.out.println("]");
