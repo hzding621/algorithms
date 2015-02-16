@@ -11,4 +11,10 @@ public class Helpers {
 		}
 		System.out.println();
 	}
+
+	public static void print(int[] array, int length) {
+		if (length > array.length)
+			print(array);
+		System.out.println(Arrays.toString(Arrays.copyOfRange(array, 0, length)));
+	}
 }
