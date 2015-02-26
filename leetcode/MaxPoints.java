@@ -2,7 +2,7 @@
 
 import java.util.*;
 
-public class Test7_6 {
+public class MaxPoints {
 	
 	public static float getSlope(Point a, Point b) {
         return (b.x - a.x) == 0 ? Float.MAX_VALUE : (float) (b.y-a.y) / (b.x-a.x); 
