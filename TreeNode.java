@@ -7,7 +7,7 @@ public class TreeNode {
 	TreeNode(int x) { val = x ;}
 	TreeNode(String tree) {
 
-		if (!tree.matches("\\d+(\\s(\\d+|\\*))*"))
+		if (!tree.matches("(-{0,1}\\d+)(\\s((-{0,1}\\d+)|\\*))*"))
 			throw new IllegalTreeEncoding();
 
 		String[] nodes = tree.split(" ");
