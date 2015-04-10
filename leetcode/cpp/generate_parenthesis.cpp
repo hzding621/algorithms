@@ -20,7 +20,7 @@ vector<string> generate_parenthesis(int n) {
 		for (auto& s: ret) {
 			for (int i=0; i<s.length(); i++) {
 				if (s[i] == '(') {
-					string new_string = s.substr(0, i+1) + "()" + s.substr(i+1, s.length()-1-i);
+					string new_string = s.substr(0, i+1) + "()" + s.substr(i+1);
 					next.insert(new_string);
 				}
 			}
