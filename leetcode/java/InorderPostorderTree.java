@@ -58,9 +58,10 @@ public class InorderPostorderTree {
 				return null; // invalid input
 		}
 
-		System.out.println("Begin building tree...");
+		// System.out.println("Begin building tree...");
 		return buildTreeHelper(inorder, 0, inorder.length-1, postorder, 0, postorder.length-1, mapping1, mapping2);
 	}
+
 
 	public static void main(String[] args) {
 		int[] in = {1,2,3,4,5};
