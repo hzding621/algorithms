@@ -7,17 +7,16 @@ struct ListNode {
 	ListNode *next;
 	ListNode(int x) : val(x), next(NULL) {}
 	void print() {
-		std::cout << "[";
-		print_rec();
-		std::cout << "]" << std::endl;
+		std::cout << val << "->";
+		if (next != NULL)
+			next->print();
+		else
+			std::cout << "NULL" << std::endl;
 	}
-	void print_rec() {
-		std::cout << val;
-		if (next) {
-			std::cout << ",";
-			next->print_rec();
-		}
+	~ListNode() {
+		clean();
 	}
+private:
 	void clean() {
 		if (next)
 			next->clean();
