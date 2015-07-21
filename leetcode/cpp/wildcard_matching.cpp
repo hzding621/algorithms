@@ -1,37 +1,35 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <algorithm>
 
 using namespace std;
 
 class Solution {
 public:
     bool isMatch(string s, string p) {
-        vector<vector<bool>> dp;
         int m = s.length(), n = p.length();
-        for (int i=0; i<=m; i++)
-            dp.emplace_back(n+1);
-        dp[m][n] = true;
+        bool *dp1 = new bool[2*n+2],
+             *dp2 = dp1 + n + 1;
+        fill_n(dp1, 2*n+2, false);
+        dp1[n] = true;
         int i = n-1;
         while (i >= 0 && p[i] == '*')
-            dp[m][i--] = true;
-        while (i >= 0)
-            dp[m][i--] = false;
-        i = m-1;
-        while (i >= 0 && s[i] == '*')
-            dp[i--][n] = true;
-        while (i >= 0)
-            dp[i--][n] = false;
+            dp1[i--] = true;
         for (int i=m-1; i>=0; i--) {
+            dp2[n] = false;
             for (int j=n-1; j>=0; j--) {
                 char c = s[i], d = p[j];
                 if (d == '*')
-                    dp[i][j] = dp[i+1][j] || dp[i][j+1];
+                    dp2[j] = dp1[j] || dp2[j+1];
                 else
-                    dp[i][j] = dp[i+1][j+1] && (d == '?' || c == d);
+                    dp2[j] = dp1[j+1] && (d == '?' || c == d);
             }
+            swap(dp1, dp2);
         }
-        return dp[0][0];
+        bool ret = dp1[0];
+        delete[] min(dp1, dp2);
+        return ret;
     }
 };
 
