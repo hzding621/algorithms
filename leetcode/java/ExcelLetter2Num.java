@@ -24,6 +24,10 @@ public class ExcelLetter2Num {
 	}
 
 	public static void main(String[] args) {
+		System.out.println(titleToNumber("A"));
+		System.out.println(titleToNumber("AA"));
 		System.out.println(titleToNumber("BA"));
+		System.out.println(titleToNumber("ZZ"));
+		System.out.println(titleToNumber("AAA"));
 	}
 }
