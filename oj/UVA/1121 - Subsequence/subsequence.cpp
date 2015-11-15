@@ -5,26 +5,18 @@
 using namespace std;
 
 int minSubArrayLen(int s, vector<int>& nums) {
-  int i = 0, j = 0;
+  int i = 0, j = 0, sum = 0, n = nums.size();
   int len = INT_MAX;
-  int sum = 0;
-  while (true) {
-    while (sum < s && i < nums.size()) {
-      sum += nums[i++];
-    }
-
-    if (sum < s && i == nums.size())
-      break;
-
-    len = min(len, i-j);
-
-    do {
-      sum -= nums[j++];
-    } while (sum >= s);
-    len = min(len, i-j+1);
-
-    if ( i == nums.size())
-      break;
+  while (i < n) {
+      while (sum < s && i < n) {
+          sum += nums[i++];
+      }
+      if (sum < s && i == n)
+          break;
+      while (sum >= s) {
+          sum -= nums[j++];
+      }
+      len = min(len, i-j+1);
   }
   return len == INT_MAX ? 0 : len;
 }
