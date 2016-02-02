@@ -9,7 +9,7 @@ using std::cout;
 using std::endl;
 using std::min;
 
-int palindrome_decomp(string& s) {
+int minCut(string& s) {
 	int n = s.length();
 	if (n == 0)
 		return 0;
@@ -54,7 +54,7 @@ int main() {
 	vector<string> tests;
 	tests.push_back("ASCII");
 	for (string& s: tests)
-		cout << s << ":" << palindrome_decomp(s) << endl;
+		cout << s << ":" << minCut(s) << endl;
 
 	return 0;
 }

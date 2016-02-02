@@ -13,15 +13,10 @@ struct ListNode {
 		else
 			std::cout << "NULL" << std::endl;
 	}
-	~ListNode() {
-		clean();
-	}
-private:
-	void clean() {
-		if (next)
-			next->clean();
-		delete next;
-		next = NULL;
+	static void clean(ListNode* head) {
+		if (head->next)
+			clean(head->next);
+		delete head;
 	}
 };
 

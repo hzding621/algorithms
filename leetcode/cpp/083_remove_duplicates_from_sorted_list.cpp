@@ -1,6 +1,7 @@
 #include <iostream>
-#include "list_node.cpp"
+#include "../../helpers/list_node.cpp"
 
+using namespace std;
 
 ListNode *deleteDuplicates(ListNode *head) {
 
@@ -31,6 +32,5 @@ int main() {
 	t = t->next = new ListNode(3);
 	ListNode *newHead = deleteDuplicates(head);
 	newHead->print();
-	newHead->clean();
-	delete newHead;
+	ListNode::clean(newHead);
 }
