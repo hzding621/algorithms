@@ -11,6 +11,8 @@
  *     ListNode(int x) : val(x), next(NULL) {}
  * };
  */
+#include <util/list_node.cpp>
+
 class Solution {
 public:
     ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
