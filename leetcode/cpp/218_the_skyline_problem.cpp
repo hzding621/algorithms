@@ -10,35 +10,31 @@ using namespace std;
 class Solution {
 public:
     vector<pair<int, int>> getSkyline(vector<vector<int>>& buildings) {
-        set<pair<int,pair<int, int>>> uniqueVert;
+        set<tuple<int,int,int>> uniqueVert;
         for (vector<int>& triple: buildings) {
         	int l = triple[0], r = triple[1], h = triple[2];
-        	auto left_mark = make_pair(l, make_pair(-h, -1));
-        	auto right_mark = make_pair(r, make_pair(h, l));
+        	auto left_mark = make_tuple(l, -h, -1);
+        	auto right_mark = make_tuple(r, h, l);
         	uniqueVert.insert(left_mark);
         	uniqueVert.insert(right_mark);
         }
-        vector<pair<int,pair<int, int>>> sortedVert;
+        vector<tuple<int,int,int>> sortedVert;
         sortedVert.assign(uniqueVert.begin(), uniqueVert.end());
         sort(sortedVert.begin(), sortedVert.end());
-
-        // for (auto& trip: sortedVert) {
-        // 	cout << trip.first << " " << trip.second.first << " " << trip.second.second << endl;
-        // }
 
         map<int, int> activeSet; // height -> count
         vector<pair<int,int>> skylinePoints;
         for (int i=0; i<sortedVert.size(); i++) {
         	auto& mark = sortedVert[i];
-        	int pos = mark.first, previousPos = mark.second.second;
+        	int pos = get<0>(mark), previousPos = get<2>(mark);
         	if (previousPos < 0) {
-        		int h = -mark.second.first;
+        		int h = -get<1>(mark);
         		if (activeSet.empty() || activeSet.rbegin()->first < h) {
         			skylinePoints.push_back(make_pair(pos, h));
         		}
         		activeSet[h]++;
         	} else {
-        		int h = mark.second.first;
+        		int h = get<1>(mark);
         		activeSet[h]--;
 
         		if (activeSet[h] == 0) {
