@@ -6,33 +6,35 @@ using namespace std;
 
 class Solution {
 public:
-    int candy(vector<int>& ratings) {
-        map<int, vector<int>> valueToIndices;
-        for (int i=0; i<ratings.size(); i++) {
-            valueToIndices[ratings[i]].push_back(i);
-        }
 
-        vector<int> candies(ratings.size(), 1);
-        for (auto it = valueToIndices.begin(); it != valueToIndices.end(); it++) {
-            for (int k: it->second) {
-                int v = 1;
-                if (k > 0 && ratings[k] > ratings[k-1])
-                    v = max(v, candies[k-1]+1);
-                if (k < ratings.size()-1 && ratings[k] > ratings[k+1])
-                    v = max(v, candies[k+1]+1);
-                candies[k] = v;
-            }
-        }
-        int sum = 0;
-        for (int i: candies) {
-            sum += i;
-        }
-        return sum;
+  int candy(vector<int>& ratings) {
+    int n = ratings.size();
+    vector<int> candies(n);
+    candies[0] = 1;
+    for (int i = 1; i < n; i++) {
+      candies[i] = 1;
+      if (ratings[i-1] < ratings[i] && candies[i] <= candies[i-1]) {
+        candies[i] = candies[i-1] + 1;
+      }
     }
+
+    for (int i = n-2; i >= 0; i--) {
+      if (ratings[i+1] < ratings[i] && candies[i] <= candies[i+1]) {
+        candies[i] = candies[i+1] + 1;
+      }
+    }
+
+    int sum = 0;
+    for (int i=0; i<n; i++) {
+      sum += candies[i];
+    }
+    return sum;
+  }
+
 };
 
 int main() {
-    vector<int> v = {1,3,5};
-    Solution sol;
-    cout << sol.candy(v) << endl;
+	vector<int> v = {1,3,5};
+	Solution sol;
+	cout << sol.candy(v) << endl;
 }
