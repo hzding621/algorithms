@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include <deque>
+#include <climits>
 #include <unordered_map>
 
 using namespace std;
@@ -9,42 +9,23 @@ using namespace std;
 class Solution {
 public:
     string minWindow(string s, string t) {
-
-        unordered_map<char, int> charCount;
-        for (int i=0; i<t.length(); i++) {
-            charCount[t[i]]++;
+        unordered_map<char, int> demandsForChars;
+        for (char c: t) {
+            demandsForChars[c]++;
         }
-        unordered_map<char, deque<int>> charToIndices;
-        vector<bool> used(s.size(), false);
-        int left = -1, cnt = 0,
-            minLen = INT_MAX,
-            minLeft = -1;
-        for (int j=0; j<s.length(); j++) {
-            char c = s[j];
-            if (charCount.count(c)) {
-                charToIndices[c].push_back(j);
-                used[j] = true;
-                if (left == -1)
-                    left = j;
-                if (charToIndices[c].size() == 1+charCount[c]) {
-                    int k = charToIndices[c][0];
-                    used[k] = false;
-                    while (!used[left])
-                        left++;
-                    charToIndices[c].pop_front();
-                } else {
-                    cnt++;
+        int demandCounter = t.size(), head = 0, tail = 0, minWin = INT_MAX, minWinHead = 0;
+        while (head < s.size()) {
+            if (demandsForChars[s[head++]]-- > 0) 
+                demandCounter--;
+            while (demandCounter == 0) {
+                if (head - tail < minWin) {
+                    minWin = head - (minWinHead = tail);
                 }
-                if (cnt == t.length() && j-left+1 < minLen) {
-                    minLen = j-left+1;
-                    minLeft = left;
-                }
+                if (demandsForChars[s[tail++]]++ == 0) 
+                    demandCounter++;
             }
         }
-        if (minLeft >= 0)
-            return s.substr(minLeft, minLen);
-        else
-            return {};
+        return minWin == INT_MAX ? "" : s.substr(minWinHead, minWin);
     }
 };
 

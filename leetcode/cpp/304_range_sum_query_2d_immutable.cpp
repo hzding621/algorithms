@@ -41,5 +41,8 @@ int main() {
 	};
 	NumMatrix numMatrix(matrix);
 	cout << numMatrix.sumRegion(2, 1, 4, 3) << endl;
+	cout << numMatrix.sumRegion(1, 1, 2, 2) << endl;
+	cout << numMatrix.sumRegion(1, 2, 2, 4) << endl;
+
 	return 0;
 }
