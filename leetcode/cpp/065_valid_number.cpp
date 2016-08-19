@@ -10,6 +10,7 @@ public:
         // 5: must at least one num or . for +-
         // 6: must at least one num for e
         // 7: only whitespace or num
+        // 8: dead state
         for (int i=0; i<s.length(); i++) {
             char c = s[i];
             if (state == 0) {
@@ -22,7 +23,7 @@ public:
                 else if (c == '+' || c == '-')
                     state = 5;
                 else
-                    return false;
+                    state = 8;
             } else if (state == 1) {
                 if (c == ' ') {
                     state = 3;
@@ -33,12 +34,12 @@ public:
                 } else if (c >= '0' && c <= '9') {
                     continue;
                 } else
-                    return false;
+                    state = 8;
             } else if (state == 4) {
                 if (c >= '0' && c <= '9') {
                     state = 2;
                 } else 
-                    return false;
+                    state = 8;
             } else if (state == 2) {
                 if (c == ' ') {
                     state = 3;
@@ -47,37 +48,37 @@ public:
                 } else if (c == 'e')
                     state = 6;
                 else
-                    return false;
+                    state = 8;
             } else if (state == 3) {
                 if (c == ' ')
                     continue;
                 else
-                    return false;
+                    state = 8;
             } else if (state == 5) {
                 if (c >= '0' && c <= '9')
                     state = 1;
                 else if (c == '.')
                     state = 4;
                 else
-                    return false;
+                    state = 8;
             } else if (state == 6) {
                 if (c >= '0' && c <= '9')
                     state = 7;
                 else if (c == '-' || c == '+')
                     state = 4;
                 else
-                    return false;
+                    state = 8;
             } else if (state == 7) {
                  if (c == ' ') {
                     state = 3;
                 } else if (c >= '0' && c <= '9') 
                     continue;
                 else
-                    return false;
+                    state = 8;
+            } else if (state == 8) {
+                continue;
             }
         }
-        if (state == 4 || state == 6 || state == 0)
-            return false;
-        return true;
+        return state == 1 || state == 2 || state == 3 || state == 5 || state == 7;
     }
 };
