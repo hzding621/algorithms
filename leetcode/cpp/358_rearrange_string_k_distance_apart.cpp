@@ -3,11 +3,13 @@
 #include <unordered_map>
 #include <queue>
 #include <cassert>
+#include <algorithm>
 
 using namespace std;
 
 class Solution {
 public:
+    
     string rearrangeString(string str, int k) {
         if (str.empty()) {
             return "";
