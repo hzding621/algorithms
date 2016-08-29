@@ -8,45 +8,50 @@ using namespace std;
 class Solution {
 public:
     int strobogrammaticInRange(string low, string high) {
-        // 1, 6, 8, 9, 0
         int len1 = low.length(), len2 = high.length();
         if (len1 > len2) return 0;
-        if (len1 == len2 && !leSameLength(low, high)) return 0;
-        string highPlusOne = plusOne(high);
+        if (len1 == len2 && !lessEqual(low, high)) return 0;
+        bool highIsSbt = isSbtString(high, len2);
         int lowToMax = countToMax(low);
-        int highToMax = highPlusOne.size() ? countToMax(highPlusOne) : 0;
+        int highToMax = countToMax(high);
         int sum = 0;
         for (int len = len1 + 1; len <= len2; len++) {
             sum += countAllOfLength(len);
         }
-        return lowToMax + sum - highToMax;
+        return lowToMax + sum - highToMax + highIsSbt;
     }
-
 private:
+    int nextStbInt[9] = {1,6,6,6,6,6,8,8,9};
+    int stbIntGe[10] = {5,4,3,3,3,3,3,2,2,1};
+    int stbSymIntGe[10] = {3,2,1,1,1,1,1,1,1,0};
+    char mirror[11] = "01----9-86";
 
-    int countToMax(string lower) {
-        // try from middle to get to next valid stro
+    int countToMax(string& lower) {
         int len = lower.length();
         int sumCount = 0;
 
+        bool prefixSbt = true, oddLength = len % 2;
         for (int i = 0; i < len/2; i++) {
-            int digit = lower[i]-'0';
+            int digit = lower[i] - '0';
             if (digit < 9) {
-                sumCount += countPartial(nextInt[digit], len/2 - i, len % 2);
+                sumCount += countPartial(nextStbInt[digit], len/2 - i, oddLength);
             }
-            if (!isStro(lower[i])) {
+            if (!isSbtInt(digit)) {
+                prefixSbt = false;
                 break;
             }
         }
 
-        if (prefixIsStro(lower)) {
-            string correctSuf = findMatchSuffix(lower);
-            string actualSuf = lower.substr((len+1)/2);
+        // consider using the prefix 
+        if (prefixSbt) {
+            string correctSuffix = findMirrorSuffix(lower, len);
+            string actualSuffix = lower.substr((len+1)/2);
 
-            if (leSameLength(actualSuf, correctSuf)) {
-                sumCount += (len % 2) ? geSingle[lower[len/2]-'0'] : 1;
-            } else {
-                sumCount += (len % 2) ? (lower[len/2] == '9' ? 0 : geSingle[lower[len/2]-'0'+1]) : 0;
+            int midDigit = lower[len/2]-'0';
+            if (lessEqual(actualSuffix, correctSuffix)) {
+                sumCount += oddLength ? stbSymIntGe[midDigit] : 1;
+            } else if (oddLength && midDigit < 9) {
+                sumCount += stbSymIntGe[midDigit+1];
             }
         }
         return sumCount;
@@ -63,39 +68,39 @@ private:
         return times;
     }
 
-    int nextInt[10] = {1,6,6,6,6,6,8,8,9};
-    int ge[11] = {5,4,3,3,3,3,3,2,2,1,0};
-    int geSingle[11] = {3,2,1,1,1,1,1,1,1,0,0}; 
-    char match[11] = "01----9-86";
-
-    int countPartial(int startDigit, int prefixLength, bool odd) {
-        int times = odd ? 3 : 1;
-        times *= ge[startDigit];
-        for (int i = 2; i <= prefixLength; i++) {
-            times *= ge[0];
+    int countPartial(int startDigit, int prefixLength, bool oddLength) {
+        int times = oddLength ? stbSymIntGe[0] : 1;
+        times *= stbIntGe[startDigit];
+        for (int i = 1; i < prefixLength; i++) {
+            times *= stbIntGe[0];
         }
         return times;
     }
 
-    bool prefixIsStro(string& s) {
-        int len = s.length();
-        for (int i = 0; i < len/2; i++) {
-            if (!isStro(s[i])) 
-                return false;
-        }
-        return true;
+    bool isSbtInt(int i) {
+        return i == 1 || i == 6 || i == 8 || i == 9 || i == 0;
     }
 
-    string findMatchSuffix(string& s) {
-        string r;
-        int len = s.length();
+    bool isSbtSymInt(int i) {
+        return i == 1 || i == 8 ||  i == 0;
+    }
+
+    string findMirrorSuffix(string& s, int len) {
+        string ret;
         for (int i = len/2-1; i >= 0; i--) {
-            r.push_back(match[s[i]-'0']);
+            ret.push_back(mirror[s[i] - '0']);
         }
-        return r;
+        return ret;
     }
 
-    bool leSameLength(string& a, string& b) {
+    bool isSbtString(string& s, int len) {
+        if (len % 2 && !isSbtSymInt(s[len/2]-'0')) return false;
+        string correctSuffix = findMirrorSuffix(s, len);
+        string actualSuffix = s.substr((len+1)/2);
+        return correctSuffix == actualSuffix; 
+    }
+
+    bool lessEqual(string& a, string& b) {
         if (a.length() != b.length()) {
             throw invalid_argument("Strings of unequal length!");
         }
@@ -107,32 +112,12 @@ private:
         }
         return true;
     }
-
-    string plusOne(string& s) {
-        // return "" if s is all nine
-        string ret;
-        int carryover = 1;
-        for (int i = s.length() - 1; i >= 0; i--) {
-            int digit = s[i] - '0' + carryover;
-            if (digit >= 10) {
-                digit -= 10;
-                carryover = 1;
-            } else {
-                carryover = 0;
-            }
-            ret.push_back('0' + digit);
-        }
-        if (carryover) return "";
-        reverse(ret.begin(), ret.end());
-        return ret;
-    }
-
-    bool isStro(char c) {
-        return (c == '0' || c == '1' || c == '6' || c == '8' || c == '9');
-    }
 };
 
 int main() {
+
+    Solution sol;
+    cout << sol.strobogrammaticInRange("0", "100") << endl;
 
     return 0;
 }
