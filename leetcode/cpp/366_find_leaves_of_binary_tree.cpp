@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <unordered_map>
+#include <algorithm>
 
 using namespace std;
 
@@ -11,7 +12,7 @@ struct TreeNode {
     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
 };
 
-class Solution {
+class TreeBuilder {
 public:
     TreeNode* buildTree(vector<int>& preorder, vector<int>& inorder) {
         unordered_map<int,int> valueToPosInInorder;
@@ -41,12 +42,41 @@ private:
     }
 };
 
+class Solution {
+public:
+    vector<vector<int>> findLeaves(TreeNode* root) {
+        vector<vector<int>> result;
+        postorder(result, root);
+        return result;
+    }
+private:
+
+    int postorder(vector<vector<int>>& result, TreeNode* root) {
+        if (root == NULL) return -1;
+        int leftHeight = postorder(result, root->left);
+        int rightHeight = postorder(result, root->right);
+        int currentHeight = 1 + max(leftHeight, rightHeight);
+        while (currentHeight >= result.size()) {
+            result.emplace_back();
+        }
+        result[currentHeight].push_back(root->val);
+        return currentHeight;
+    }
+};
+
 int main() {
 
-    vector<int> preorder = {1,4,3,2,5,6};
-    vector<int> inorder = {1,2,3,4,5,6};
-    TreeNode* root = Solution().buildTree(preorder, inorder);
+    vector<int> preorder = {0,1,2,4,5,3,7};
+    vector<int> inorder = {4,2,5,1,3,0,7};
+    TreeNode* tree = TreeBuilder().buildTree(preorder, inorder);
 
+    auto vvi = Solution().findLeaves(tree);
+    for (auto& vi: vvi) {
+        for (int i: vi) {
+            cout << i << " ";
+        }
+        cout << endl;
+    }
 
     return 0;
 }
