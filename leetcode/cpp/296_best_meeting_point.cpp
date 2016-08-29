@@ -24,12 +24,11 @@ public:
         int x = xLen % 2 ? xcoords[xLen/2] : (xcoords[xLen/2] + xcoords[xLen/2-1]) / 2;
         int y = yLen % 2 ? ycoords[yLen/2] : (ycoords[yLen/2] + ycoords[yLen/2-1]) / 2;
         int dist = 0;
-        for (int i = 0; i < grid.size(); i++) {
-            for (int j = 0; j < grid[0].size(); j++) {
-                if (grid[i][j]) {
-                    dist += abs(x - i) + abs(y - j);
-                }
-            }
+        for (int i: xcoords) {
+            dist += abs(i - x);
+        }
+        for (int j: ycoords) {
+            dist += abs(j - y);
         }
         return dist;
     }
