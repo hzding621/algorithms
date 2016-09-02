@@ -1,87 +1,60 @@
 #include <iostream>
 #include <vector>
-#include <string>
 
 using namespace std;
 
 class Solution {
 public:
     bool exist(vector<vector<char>>& board, string word) {
-
-        if (board.size() == 0 || board[0].size() == 0)
-            return false;
-
-        if (word.length() == 0)
-            return true;
-
-        for (int i=0; i<board.size(); i++) {
-            for (int j=0; j<board[i].size(); j++) {
-                if (board[i][j] != word[0])
-                    continue;
-                bool res = false;
-                char c = board[i][j];
-                board[i][j] = ' ';
-                backtrack(board, i, j, word, 1, &res);
-                board[i][j] = c;
-                if (res)
-                    return true;
+        int n = board.size();
+        if (n == 0) return false;
+        int m = board[0].size();
+        if (m == 0) return false;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                if (dfs(board, word, 0, i, j)) return true;
             }
         }
         return false;
     }
 private:
-    const static char _unique_char = ' ';
-    void backtrack(vector<vector<char>>& board,  int i, int j, const string& word, int index, bool* res) {
-        if (index == word.length()) {
-            *res = true;
-            return;
+    bool dfs(vector<vector<char>> &board, string &word, int stringIndex, int i, int j) {
+        if (i < 0 || i >= board.size() || j < 0 || j >= board[0].size()) {
+            return false;
         }
-
-        char c;
-        if (i > 0 &&  word[index] == board[i-1][j]) {
-            c = board[i-1][j];
-            board[i-1][j] = _unique_char;
-            backtrack(board, i-1, j, word, index+1, res);
-            board[i-1][j] = c;
-            if (*res) return;
+        char c = board[i][j];
+        if (c == ' ' || c != word[stringIndex]) {
+            return false;
         }
-        if (j > 0 &&  word[index] == board[i][j-1]) {
-
-            c = board[i][j-1];
-            board[i][j-1] = _unique_char;
-            backtrack(board, i, j-1, word, index+1, res);
-            board[i][j-1] = c;
-            if (*res) return;
+        if (stringIndex == word.length() - 1) {
+            return c == word[stringIndex];
         }
-        if (i < board.size()-1 && word[index] == board[i+1][j]) {
-            c = board[i+1][j];
-            board[i+1][j] = _unique_char;
-            backtrack(board, i+1, j, word, index+1, res);
-            board[i+1][j] = c;
-            if (*res) return;
+        board[i][j] = ' ';
+        static vector<vector<int>> dirs = {{0,1}, {0,-1}, {1,0}, {-1,0}};
+        for (auto& uv: dirs) {
+            int x = i + uv[0], y = j + uv[1];
+            if (dfs(board, word, stringIndex + 1, x, y)) {
+                board[i][j] = c;
+                return true;
+            }
         }
-        if (j < board[i].size()-1 && word[index] == board[i][j+1]) {
-            c = board[i][j+1];
-            board[i][j+1] = _unique_char;
-            backtrack(board, i, j+1, word, index+1, res);
-            board[i][j+1] = c;
-            if (*res) return;
-        }
+        board[i][j] = c;
+        return false;
     }
-
 };
 
 int main() {
 
+    vector<vector<char>> board = {
+            {'A','B','C','E'},
+            {'S','F','C','S'},
+            {'A','D','E','E'}
+    };
+
     Solution sol;
-
-    vector<vector<char>> board;
-    board.push_back(vector<char>{'A','B','C','E'});
-    board.push_back(vector<char>{'S','F','C','S'});
-    board.push_back(vector<char>{'A','D','E','E'});
-
-    cout << boolalpha;
     cout << sol.exist(board, "ABCCED") << endl;
+    cout << sol.exist(board, "SEE") << endl;
+    cout << sol.exist(board, "ABCB") << endl;
 
     return 0;
 }
