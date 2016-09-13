@@ -36,60 +36,104 @@ private:
 class NestedIterator {
 public:
     NestedIterator(vector<NestedInteger> &nestedList) {
-        begins.push(nestedList.begin());
-        ends.push(nestedList.end());
+        it = new ListIterator(nestedList);
     }
 
     int next() {
-        // hasNext();
-        return (begins.top()++)->getInteger();
+        if (!it->hasNext()) {
+            throw out_of_range("Iterator has reached end!");
+        }
+        return it->next();
     }
 
     bool hasNext() {
-        while (begins.size()) {
-            if (begins.top() == ends.top()) {
-                begins.pop();
-                ends.pop();
-            } else {
-                auto x = begins.top();
-                if (x->isInteger()) {
-                    return true;
-                }
-                begins.top()++;
-                begins.push(x->getList().begin());
-                ends.push(x->getList().end());
-            }
-        }
-        return false;
+        return it->hasNext();
     }
 private:
-    stack<vector<NestedInteger>::iterator> begins, ends;
+    class RecursiveIterator {
+    public:
+        virtual bool hasNext() = 0;
+        virtual int next() = 0;
+    };
+
+    class IntIterator : public RecursiveIterator {
+    public:
+        IntIterator(int i) : _i(i){}
+
+        int next() {
+            if (!hasNext()) {
+                throw out_of_range("Iterator has reached end!");
+            }
+            _hasEnd = true;
+            return _i;
+        }
+
+        bool hasNext() {
+            return !_hasEnd;
+        }
+    private:
+        int _i;
+        bool _hasEnd = false;
+    };
+
+    class ListIterator : public RecursiveIterator {
+    public:
+        ListIterator(const vector<NestedInteger>& list) {
+            for (const auto& ni: list) {
+                if (ni.isInteger()) {
+                    _itList.push_back(new IntIterator(ni.getInteger()));
+                } else {
+                    _itList.push_back(new ListIterator(ni.getList()));
+                }
+            }
+        }
+
+        int next() {
+            if (!hasNext()) {
+                throw out_of_range("Iterator has reached end!");
+            }
+            return _itList[_i]->next();
+        }
+
+        bool hasNext() {
+            while (_i < _itList.size() && !(_itList[_i]->hasNext())) {
+                _i++;
+            }
+            return _i < _itList.size();
+        }
+
+    private:
+        vector<RecursiveIterator*> _itList;
+        int _i = 0;
+    };
+    
+    RecursiveIterator *it;
 };
 
 int main() {
 
-    // vector<NestedInteger> v = {
-    //     // NestedInteger(1),
-    //     NestedInteger(vector<NestedInteger>{
-    //         NestedInteger(2),
-    //         NestedInteger(
-    //             vector<NestedInteger>{
-    //                 NestedInteger(3),
-    //                 NestedInteger(4)
-    //         })
-    //     }),
-    //     NestedInteger(5),
-    //     NestedInteger(
-    //         vector<NestedInteger>{
-    //             NestedInteger(6),
-    //             NestedInteger(7)
-    //     }),
-    //     NestedInteger(8)
-    // };
-    // NestedIterator it(v);
-    // while (it.hasNext()) {
-    //     cout << it.next() << endl;
-    // }
+    vector<NestedInteger> v = {
+        NestedInteger(1),
+        NestedInteger(vector<NestedInteger>{
+            NestedInteger(2),
+            NestedInteger(
+                vector<NestedInteger>{
+                    NestedInteger(3),
+                    NestedInteger(4)
+            })
+        }),
+        NestedInteger(5),
+        NestedInteger(
+            vector<NestedInteger>{
+                NestedInteger(6),
+                NestedInteger(7)
+        }),
+        NestedInteger(8)
+    };
+    NestedIterator it(v);
+    while (it.hasNext()) {
+        cout << it.next() << endl;
+    }
 
     return 0;
 }
