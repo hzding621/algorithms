@@ -64,7 +64,7 @@ private:
 int main() {
 
     Solution sol;
-    vector<string> vs = sol.generatePalindromes("abcba");
+    vector<string> vs = sol.generatePalindromes("aaaa");
     for (auto& s: vs) {
         cout << s << endl;
     }
