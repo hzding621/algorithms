@@ -11,18 +11,22 @@ public:
         if (k == 0) {
             return 0;
         }
-        unordered_map<char, int> charLastAppearPos;
-        int i = 0, j = 0, maxLen = 0;
+        unordered_map<char, int> lastAppearIndex;
+        int i = 0, j = 0, maxLen = 0; // two pointers
         while (j < s.length()) {
             char c = s[j];
-            if (!charLastAppearPos.count(c) && charLastAppearPos.size() == k) {
-                while (charLastAppearPos[s[i]] != i) {
+
+            // read a new character, but current seen characters have reached k
+            if (!lastAppearIndex.count(c) && lastAppearIndex.size() == k) {
+                while (lastAppearIndex[s[i]] != i) {
                     i++;
                 }
-                charLastAppearPos.erase(s[i]);
+
+                // i is at the last appearing position of s[i]
+                lastAppearIndex.erase(s[i]);
                 i++;
-            } 
-            charLastAppearPos[s[j]] = j;
+            }
+            lastAppearIndex[s[j]] = j;
             maxLen = max(maxLen, j - i + 1);
             j++;
         }
