@@ -14,9 +14,7 @@
 #include <string>
 #include <chrono>
 
-using namespace std;
-
-struct TreeNode {
+using namespace std;struct TreeNode {
     int val;
     TreeNode *left;
     TreeNode *right;
