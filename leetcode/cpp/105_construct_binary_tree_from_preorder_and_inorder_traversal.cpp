@@ -23,7 +23,7 @@ struct TreeNode {
     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
 };
 
-class TreeBuilder {
+class Solution {
 public:
     TreeNode* buildTree(vector<int>& preorder, vector<int>& inorder) {
         unordered_map<int,int> valueToPosInInorder;
@@ -32,6 +32,7 @@ public:
         }
         return buildTreeRecursion(preorder, 0, preorder.size()-1, valueToPosInInorder, 0, inorder.size()-1);
     }
+
 
 private:
     TreeNode* buildTreeRecursion(vector<int>& preorder, int i1, int j1, unordered_map<int,int>& valueToPosInInorder, int i2, int j2) {
@@ -52,51 +53,11 @@ private:
     }
 };
 
-class Solution {
-public:
-    TreeNode* inorderSuccessor(TreeNode* root, TreeNode* p) {
-        if (root == nullptr || p == nullptr) return nullptr;
-        auto result = findAncestor(root, p);
-        if (p->right) {
-            TreeNode* cur = p->right;
-            while (cur->left) {
-                cur = cur->left;
-            }
-            return cur;
-        } else {
-            return result.second;
-        }
-    }
-private:
-
-    pair<bool,TreeNode*> findAncestor(TreeNode* node, TreeNode* target) {
-        if (node == nullptr) return make_pair(false, nullptr);
-        if (node->left == target) {
-            return make_pair(true, node);
-        }
-        if (node->right == target) {
-            return make_pair(true, nullptr);
-        }
-        auto leftResult = findAncestor(node->left, target);
-        if (leftResult.first) {
-            if (leftResult.second) return leftResult;
-            else return make_pair(true, node);
-        }
-        auto rightResult = findAncestor(node->right, target);
-        if (rightResult.first) return rightResult;
-        return make_pair(false, nullptr);
-    }
-};
-
 int main() {
 
     vector<int> preorder = {1,2,4,5,3,6,7};
     vector<int> inorder = {4,2,5,1,6,3,7};
-    TreeNode* tree = TreeBuilder().buildTree(preorder, inorder);
-
-    Solution solution;
-    TreeNode* successor = solution.inorderSuccessor(tree, tree->right->left);
-    cout << successor->val << endl;
+    TreeNode* tree = Solution().buildTree(preorder, inorder);
 
     return 0;
 }
