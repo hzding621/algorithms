@@ -20,7 +20,7 @@ public class GasStation {
 						return -1;
 				} 
 				i++;					
-			} while (sum > 0)
+			} while (sum > 0);
 
 			do {
 				sum += diff[j];

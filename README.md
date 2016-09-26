@@ -1,4 +1,4 @@
-# My Coding Solutions
-These are my practice files for coding interview. The problems are mostly from  Gayle Laakmann McDowell's Cracking the Coding Interview (I am using Fourth version and the filename are just the problem numbers on the book) and LeetCode.com (for which I have included the links to the pages). 
+# Coding Interview Questions
+Here are most of my preparation materials for algorithmic coding interviews. Most of the stuffs are in leetcode/cpp, which are prefixed by question id from Leetcode.com
 
 Feel free to discuss the problems with me: <a href="mailto:hding8@illinois.edu">hding8@illinois.edu</a>
