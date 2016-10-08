@@ -46,10 +46,6 @@ private:
 class Solution {
 public:
     vector<vector<int>> verticalOrder(TreeNode* root) {
-        if (root == NULL) return {};
-
-        TreeNode* cursor = root;
-        int leftOffset = 0;
         vector<vector<int>> left;
         vector<vector<int>> right;
         bfs(left, right, root);
@@ -64,7 +60,7 @@ private:
 
     void bfs(vector<vector<int>>& left, vector<vector<int>>& right, TreeNode* root) {
         queue<pair<TreeNode*,int>> q;
-        q.push(make_pair(root, 0));
+        q.emplace(root, 0);
         while (!q.empty()) {
             TreeNode* n; int order; 
             tie(n, order) = q.front(); q.pop();
@@ -80,8 +76,8 @@ private:
                 }
                 left[-order-1].push_back(n->val);
             }
-            q.push(make_pair(n->left, order-1));
-            q.push(make_pair(n->right, order+1));
+            q.emplace(n->left, order-1);
+            q.emplace(n->right, order+1);
         }
     }
 };
