@@ -10,9 +10,11 @@ public:
         while (people.size()) {
 
             // put the people with no predecessor and smallest height to the tail of vector
-            nth_element(people.begin(), people.end() - 1, people.end(), [](const pair<int,int>& a, const pair<int,int>& b) {
+            auto max_iter = max_element(people.begin(), people.end(), [](const pair<int,int>& a, const pair<int,int>& b) {
                 return b.second < a.second || (b.second == a.second && b.first < a.first);
             });
+            
+            iter_swap(max_iter, people.end() - 1);
 
             auto first = people.back();
             people.pop_back();
@@ -24,7 +26,7 @@ public:
             }
             result.push_back(make_pair(first.first, predecessor));
 
-            // update predecessors, subtract 1 from all that are shorter
+            // update predecessors, subtract first from
             for (auto& later: people) {
                 if (first.first >= later.first) later.second--;
             }

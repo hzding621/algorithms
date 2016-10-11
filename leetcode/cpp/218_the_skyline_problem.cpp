@@ -20,7 +20,6 @@ public:
         }
         vector<tuple<int,int,int>> sortedVert;
         sortedVert.assign(uniqueVert.begin(), uniqueVert.end());
-        sort(sortedVert.begin(), sortedVert.end());
 
         map<int, int> activeSet; // height -> count
         vector<pair<int,int>> skylinePoints;
